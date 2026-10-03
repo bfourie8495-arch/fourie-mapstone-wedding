@@ -2,11 +2,11 @@
 :root{
   --bg:#F7F4EE; --surface:#ffffff; --fg:#1B2550; --muted:#5a6078; --line:#E2DCCF;
   --indigo:#24356B; --indigo-deep:#17224A; --ochre:#C8902A;
-  --blue:#1F3A93; --midnight:#142456; --canary:#F2B705; --ink:#17150F; --f-argent:#ECE8DF; --m-argent:#F3EEE2; --accent:#C2546E; --ok:#2f7d4f; --err:#b3261e;
+  --blue:#142456; --midnight:#142456; --canary:#F2B705; --ink:#17150F; --f-argent:#ECE8DF; --m-argent:#F3EEE2; --accent:#C2546E; --ok:#2f7d4f; --err:#b3261e;
   --slab:"Young Serif", Georgia, "Times New Roman", serif;
   --cond:"Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
   --body:"Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
-  --print-f:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%231F3A93'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23D9A63A' stroke-width='5'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23142456' stroke-width='1'/%3E%3Ccircle cx='8' cy='24' r='1.6' fill='%23ECE8DF'/%3E%3Ccircle cx='24' cy='8' r='1.6' fill='%23ECE8DF'/%3E%3C/svg%3E");
+  --print-f:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%23142456'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23D9A63A' stroke-width='5'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23142456' stroke-width='1'/%3E%3Ccircle cx='8' cy='24' r='1.6' fill='%23ECE8DF'/%3E%3Ccircle cx='24' cy='8' r='1.6' fill='%23ECE8DF'/%3E%3C/svg%3E");
   --print-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Crect width='28' height='28' fill='%23F2B705'/%3E%3Cpath d='M5 16L14 8L23 16' fill='none' stroke='%2317150F' stroke-width='3'/%3E%3Ccircle cx='0' cy='28' r='2' fill='%2317150F'/%3E%3Ccircle cx='28' cy='28' r='2' fill='%2317150F'/%3E%3Ccircle cx='14' cy='22' r='1.4' fill='%23F3EEE2'/%3E%3C/svg%3E");
 
 }
@@ -91,3 +91,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
   .score{grid-template-columns:1fr 1fr}
   .score .midcol{grid-column:1 / -1;grid-row:2;flex-direction:row;display:flex;gap:10px;justify-content:center}
 }
+
+/* Fourie ink is close to the dark background, so give its marks a light edge in dark mode. */
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) :is(.pill.pf,.df,.tug i:first-child){box-shadow:inset 0 0 0 1.5px var(--f-argent)}}
+:root[data-theme="dark"] :is(.pill.pf,.df,.tug i:first-child){box-shadow:inset 0 0 0 1.5px var(--f-argent)}
