@@ -84,6 +84,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .btn.danger{background:transparent;color:var(--err);border:1.5px solid var(--err)}
 .btn:disabled{opacity:.5;cursor:default}
 
+.draft{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.draft li{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem}
+
 @media (max-width:560px){
   .score{grid-template-columns:1fr 1fr}
   .score .midcol{grid-column:1 / -1;grid-row:2;flex-direction:row;display:flex;gap:10px;justify-content:center}

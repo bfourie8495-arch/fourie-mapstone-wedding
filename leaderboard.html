@@ -49,7 +49,7 @@
 </header>
 
 <main class="wrap stack">
-  <p class="demo" id="demo" hidden>Demo mode: these are example names and scores. Real ones appear once the Google Sheet is connected.</p>
+  <p class="demo" id="demo" hidden>Preview: the names are our real guest list, but the scores are examples until the Google Sheet is connected.</p>
 
   <section class="score" aria-label="Team totals">
     <div class="team f"><svg viewBox="0 0 100 110" aria-hidden="true"><use href="#arms-f"/></svg><span class="tname">Fourie</span><span class="pts" id="t-f">0</span></div>
@@ -84,10 +84,16 @@
       <tbody id="players"></tbody>
     </table></div>
   </section>
+  <section class="stack" id="draft-wrap" hidden>
+    <h2>Waiting for the draft</h2>
+    <p class="hint">Family plays for its own surname. Everyone else gets picked by the captains on Draft Night, so these <span id="draft-n"></span> players don’t have a team yet.</p>
+    <ul class="draft" id="draft"></ul>
+  </section>
   <p class="hint" id="updated"></p>
 </main>
 
 <script src="assets/config.js"></script>
+<script src="assets/guests.js"></script>
 <script src="assets/store.js"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -122,7 +128,13 @@ function render() {
   const q = $("q").value.trim().toLowerCase();
   const rows = c.playerRows.filter(r => (!filterTeam || r.player.team === filterTeam) && (!q || r.player.name.toLowerCase().includes(q)));
   $("players").innerHTML = rows.length ? rows.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.player.name)}${r.player.role === "captain" ? ' <span class="pill">Captain</span>' : ""}</td><td><span class="dot ${r.player.team === "Fourie" ? "df" : "dm"}"></span>${esc(r.player.team)}</td><td class="num">${r.events}</td><td class="num">${r.bonus}</td><td class="num strong">${r.points}</td></tr>`).join("")
-    : `<tr><td colspan="6" class="muted">${state.players.length ? "No players match." : "Players appear here once the couple adds them on the Captains page."}</td></tr>`;
+    : `<tr><td colspan="6" class="muted">${c.playerRows.length ? "No players match." : "Players appear here once the couple adds them on the Captains page."}</td></tr>`;
+  const undrafted = state.players.filter(p => !Wedding.TEAMS.includes(p.team) && p.role !== "official")
+    .filter(p => !q || p.name.toLowerCase().includes(q))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  $("draft-wrap").hidden = !undrafted.length || !!filterTeam;
+  $("draft-n").textContent = undrafted.length;
+  $("draft").innerHTML = undrafted.map(p => `<li>${esc(p.name)}</li>`).join("");
 }
 
 async function load() {

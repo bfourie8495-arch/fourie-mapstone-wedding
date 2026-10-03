@@ -34,30 +34,21 @@
   }
 
   // ---------- demo mode ----------
-  const DEMO_KEY = "fm-demo-v1";
+  const DEMO_KEY = "fm-demo-v2";
   const DEMO_PIN = "2028";
   function demoSeed() {
-    const names = [
-      ["Example Player 1", "Fourie", "captain"], ["Example Player 2", "Fourie", "player"],
-      ["Example Player 3", "Fourie", "player"], ["Example Player 4", "Fourie", "player"],
-      ["Example Player 5", "Mapstone", "captain"], ["Example Player 6", "Mapstone", "player"],
-      ["Example Player 7", "Mapstone", "player"], ["Example Player 8", "Mapstone", "player"],
-      ["Example Referee", "", "official"],
-    ];
-    const players = names.map((n, i) => ({ id: "p" + (i + 1), name: n[0], team: n[1], role: n[2], number: String(i + 1) }));
+    // Real guest names (assets/guests.js); the scores stay as examples until the Sheet is live.
+    const guests = window.WEDDING_GUESTS || [];
+    const players = guests.map((g, i) => ({ id: "g" + (i + 1), name: g[0], team: g[1], role: "player", number: "" }));
     return {
       players,
       events: DEFAULT_EVENTS.map(e => Object.assign({}, e)),
-      squads: [
-        { eventId: "quiz", playerId: "p1" }, { eventId: "quiz", playerId: "p2" },
-        { eventId: "quiz", playerId: "p5" }, { eventId: "quiz", playerId: "p6" },
-        { eventId: "election", playerId: "p1" }, { eventId: "election", playerId: "p5" },
-      ],
+      squads: [],
       results: [
         { eventId: "election", fouriePts: 0, mapstonePts: 15, joker: "", note: "Example result", public: true },
         { eventId: "quiz", fouriePts: 15, mapstonePts: 0, joker: "", note: "Example result", public: true },
       ],
-      bonuses: [{ id: "b1", playerId: "p6", points: 3, reason: "Example: stole 3 golden eggs" }],
+      bonuses: [],
       settings: { blackout: false },
     };
   }
