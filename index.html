@@ -1,24 +1,29 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Fourie × Mapstone</title>
+<title>Brendon &amp; Jess · Fourie × Mapstone</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:ital,wght@0,700;1,900&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Hanken+Grotesk:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: one long invitation page. Split blue/yellow hero with countdown, sticky nav, then content sections on a warm paper ground, RSVP form near the end. */
 :root{
-  --bg:#f8f5ee; --surface:#ffffff; --fg:#1a1d29; --muted:#5d6170; --line:#e4ded2;
-  --blue:#1C3FD1; --midnight:#0A1450; --canary:#FFD60A; --ink:#141414; --accent:#C2546E;
-  --slab:"Alfa Slab One", Rockwell, Georgia, serif;
-  --cond:"Barlow Condensed", "Arial Narrow", sans-serif;
-  --body:"Barlow", "Segoe UI", system-ui, sans-serif;
+  /* Shweshwe palette: indigo print on cream, ochre and protea accents. Team blue/yellow only on team elements. */
+  --bg:#F7F4EE; --surface:#ffffff; --fg:#1B2550; --muted:#5a6078; --line:#E2DCCF;
+  --indigo:#24356B; --indigo-deep:#17224A; --ochre:#C8902A; --protea:#C2546E; --sage:#6F8A6A; --cream:#F7F4EE;
+  --blue:#1F3A93; --midnight:#142456; --canary:#F2B705; --ink:#17150F; --f-argent:#ECE8DF; --m-argent:#F3EEE2; --accent:#9A6A12;
+  --slab:"Young Serif", Georgia, "Times New Roman", serif;
+  --cond:"Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body:"Hanken Grotesk", "Segoe UI", system-ui, sans-serif;
+  --print-f:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' fill='%231F3A93'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23D9A63A' stroke-width='5'/%3E%3Cpath d='M0 0L32 32M-16 16L16 48M16 -16L48 16' stroke='%23142456' stroke-width='1'/%3E%3Ccircle cx='8' cy='24' r='1.6' fill='%23ECE8DF'/%3E%3Ccircle cx='24' cy='8' r='1.6' fill='%23ECE8DF'/%3E%3C/svg%3E");
+  --print-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Crect width='28' height='28' fill='%23F2B705'/%3E%3Cpath d='M5 16L14 8L23 16' fill='none' stroke='%2317150F' stroke-width='3'/%3E%3Ccircle cx='0' cy='28' r='2' fill='%2317150F'/%3E%3Ccircle cx='28' cy='28' r='2' fill='%2317150F'/%3E%3Ccircle cx='14' cy='22' r='1.4' fill='%23F3EEE2'/%3E%3C/svg%3E");
+
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11131a;--surface:#1a1d27;--fg:#eeede8;--muted:#a6a9b4;--line:#2c303d;--accent:#E9839B;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#11131a;--surface:#1a1d27;--fg:#eeede8;--muted:#a6a9b4;--line:#2c303d;--accent:#E9839B;color-scheme:dark}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#10152B;--surface:#18203D;--fg:#EEEAE0;--muted:#A9AEC4;--line:#2A3358;--accent:#E2AE4E;--protea:#E07A92;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10152B;--surface:#18203D;--fg:#EEEAE0;--muted:#A9AEC4;--line:#2A3358;--accent:#E2AE4E;--protea:#E07A92;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6}
 h1,h2,h3{margin:0;text-wrap:balance;line-height:1.02}
-h2{font-family:var(--slab);font-weight:400;font-size:clamp(2rem,5vw,3rem);text-transform:uppercase}
+h2{font-family:var(--slab);font-weight:400;font-size:clamp(2rem,5vw,3rem)}
 h3{font-family:var(--cond);font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
 p{margin:0}
 a{color:inherit}
@@ -28,34 +33,51 @@ a{color:inherit}
 section{padding-block:80px 0;scroll-margin-top:60px}
 section > .wrap{display:grid;gap:22px}
 
-/* hero */
-.hero{display:grid;grid-template-columns:1fr 1fr;position:relative;min-height:520px}
-.hero .s{display:grid;align-content:center;padding:48px 28px;gap:8px}
-.hero .sf{background:var(--blue);color:#fff;justify-items:end;text-align:right}
-.hero .sm{background:var(--canary);color:var(--ink)}
-.hero .nm{font-family:var(--slab);font-size:clamp(2.4rem,7.5vw,5.4rem);line-height:.9;text-transform:uppercase}
-.hero .sub{font-family:var(--cond);font-style:italic;font-weight:900;font-size:clamp(1rem,2vw,1.35rem);text-transform:uppercase;letter-spacing:.06em}
-.hero .center{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:18px 26px;border-radius:14px;text-align:center;display:grid;gap:6px;width:min(560px,calc(100% - 40px));box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.hero .center .d{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.95rem}
-.count{display:flex;justify-content:center;gap:18px;font-variant-numeric:tabular-nums}
+/* hero: indigo shweshwe print */
+.shweshwe{background-color:var(--indigo);background-image:
+  radial-gradient(circle,rgba(255,255,255,.85) 1.6px,transparent 2.2px),
+  radial-gradient(circle,rgba(255,255,255,.35) 1px,transparent 1.6px),
+  linear-gradient(45deg,transparent 47%,rgba(255,255,255,.18) 48% 52%,transparent 53%),
+  linear-gradient(-45deg,transparent 47%,rgba(255,255,255,.18) 48% 52%,transparent 53%);
+  background-size:28px 28px,28px 28px,28px 28px,28px 28px;background-position:0 0,14px 14px,0 0,0 0}
+.hero{display:grid;place-items:center;padding:72px 20px;min-height:520px}
+.hero .card{background:var(--cream);color:#1B2550;border-radius:22px;padding:40px 32px 30px;text-align:center;display:grid;gap:14px;justify-items:center;width:min(640px,100%);box-shadow:0 0 0 8px rgba(247,244,238,.25),0 24px 50px rgba(0,0,0,.3);border-top:10px solid var(--ochre)}
+.hero .kicker{font-family:var(--cond);font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:.85rem;color:#8a5f12}
+.hero h1{font-family:var(--slab);font-weight:400;font-size:clamp(2.4rem,8vw,4.4rem);line-height:1;color:var(--indigo)}
+.hero h1 .x{color:var(--protea);font-size:.7em;vertical-align:.12em;padding-inline:.1em}
+.teams{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.tchip{display:inline-flex;align-items:center;gap:8px;font-family:var(--cond);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 14px;border-radius:999px;font-size:1rem}
+.tchip.f{background:var(--print-f);color:#fff}
+.tchip svg{width:18px;height:auto}
+.tchip b{font-weight:700;padding:1px 6px;border-radius:3px}
+.tchip.f b{background:var(--f-argent);color:var(--midnight)}
+.tchip.m b{background:var(--m-argent);color:var(--ink)}
+.tchip.m{background:var(--print-m);color:var(--ink)}
+.tchip.vs{background:transparent;color:#5a6078;font-style:normal;padding-inline:2px}
+.hero .d{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.95rem;color:#1B2550}
+.count{display:flex;justify-content:center;gap:22px;font-variant-numeric:tabular-nums;padding-top:6px;border-top:1px solid #E2DCCF;width:100%}
 .count div{display:grid;justify-items:center}
-.count b{font-family:var(--slab);font-weight:400;font-size:clamp(1.6rem,4vw,2.2rem);line-height:1}
-.count span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#bbb}
-.vs{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) skewX(-10deg);background:#fff;color:var(--ink);font-family:var(--slab);font-size:clamp(1.6rem,4vw,2.6rem);padding:2px 16px 6px;border:4px solid var(--ink)}
+.count b{font-family:var(--slab);font-weight:400;font-size:clamp(1.8rem,5vw,2.4rem);line-height:1;color:var(--indigo)}
+.count span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#5a6078}
+.band{height:10px;background:repeating-linear-gradient(90deg,var(--ochre) 0 24px,var(--protea) 24px 36px,var(--sage) 36px 48px,var(--indigo) 48px 60px)}
 
 nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
 nav .wrap{display:flex;gap:6px 22px;flex-wrap:wrap;justify-content:center;padding-block:12px}
 nav a{font-family:var(--cond);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.88rem;text-decoration:none;color:var(--muted)}
 nav a:hover,nav a:focus-visible{color:var(--fg)}
-nav a.rsvp{color:var(--accent)}
+nav a.rsvp{color:var(--protea)}
 
 /* sides */
 .sides{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.side{border-radius:16px;padding:24px;display:grid;gap:8px}
-.side.f{background:var(--blue);color:#fff}
-.side.m{background:var(--canary);color:var(--ink)}
-.side .t{font-family:var(--slab);font-size:2rem;text-transform:uppercase;line-height:1}
-.side q{font-family:var(--cond);font-style:italic;font-weight:900;font-size:1.3rem;text-transform:uppercase;quotes:none}
+.side{border-radius:16px;padding:24px;display:grid;grid-template-columns:auto 1fr;gap:6px 18px;align-items:center}
+.side svg{width:72px;height:auto;grid-row:span 3;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}
+.side > *:not(svg){justify-self:start;padding:2px 10px;border-radius:4px}
+.side.f{background:var(--print-f)}
+.side.f > *:not(svg){background:var(--f-argent);color:var(--midnight)}
+.side.m{background:var(--print-m)}
+.side.m > *:not(svg){background:var(--m-argent);color:var(--ink)}
+.side .t{font-family:var(--slab);font-size:2rem;line-height:1.1}
+.side q{font-family:var(--cond);font-weight:700;font-size:1.3rem;text-transform:uppercase;quotes:none}
 
 /* schedule */
 .days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
@@ -99,28 +121,62 @@ button{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transfo
 details{border-bottom:1px solid var(--line);padding-block:14px}
 summary{cursor:pointer;font-weight:600}
 details p{color:var(--muted);margin-top:8px}
-footer{padding-block:72px 56px;text-align:center;color:var(--muted);font-size:.9rem}
-footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;color:var(--fg);display:block;margin-bottom:6px}
+footer{margin-top:80px;padding-block:56px;text-align:center;color:#F7F4EE;font-size:.9rem}
+footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;display:block;margin-bottom:6px}
+footer span{background:var(--indigo);padding:4px 10px;border-radius:6px}
 
 @media (max-width:760px){
   .days,.info,.sides,.row{grid-template-columns:1fr}
 }
 @media (max-width:560px){
-  .hero{grid-template-columns:1fr;min-height:0}
-  .hero .s{padding:40px 20px}
-  .hero .sf{justify-items:start;text-align:left}
-  .hero .center{position:static;transform:none;width:auto;border-radius:0}
-  .vs{top:33%}
+  .hero{padding:40px 16px;min-height:0}
+  .hero .card{padding:28px 18px 22px}
   form{padding:20px}
 }
 </style>
 </head><body>
 
-<header class="hero">
-  <div class="s sf"><span class="nm">Fourie</span><span class="sub">The Blue Cranes</span></div>
-  <div class="s sm"><span class="nm">Mapstone</span><span class="sub">The Weavers</span></div>
-  <div class="vs" aria-hidden="true">VS</div>
-  <div class="center">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <clipPath id="shieldClip"><path d="M8 6H92V50C92 78 74 98 50 106C26 98 8 78 8 50Z"/></clipPath>
+  <symbol id="arms-f" viewBox="0 0 100 110">
+    <g clip-path="url(#shieldClip)">
+      <rect width="100" height="110" fill="#D9A63A"/>
+      <g transform="rotate(45 50 60)">
+        <rect x="-40" y="-40" width="12" height="200" fill="#1F3A93"/><rect x="-16" y="-40" width="12" height="200" fill="#1F3A93"/>
+        <rect x="8" y="-40" width="12" height="200" fill="#1F3A93"/><rect x="32" y="-40" width="12" height="200" fill="#1F3A93"/>
+        <rect x="56" y="-40" width="12" height="200" fill="#1F3A93"/><rect x="80" y="-40" width="12" height="200" fill="#1F3A93"/>
+        <rect x="104" y="-40" width="12" height="200" fill="#1F3A93"/><rect x="128" y="-40" width="12" height="200" fill="#1F3A93"/>
+      </g>
+      <rect x="0" y="0" width="100" height="32" fill="#ECE8DF"/>
+      <polygon points="50,9 52.6,13.2 57.5,12.5 56.2,17 60,20 56.2,23 57.5,27.5 52.6,26.8 50,31 47.4,26.8 42.5,27.5 43.8,23 40,20 43.8,17 42.5,12.5 47.4,13.2" fill="#B8322A"/>
+      <circle cx="50" cy="20" r="4.6" fill="#D2483D"/>
+    </g>
+    <path d="M8 6H92V50C92 78 74 98 50 106C26 98 8 78 8 50Z" fill="none" stroke="#142456" stroke-width="3"/>
+    <path d="M8 32H92" stroke="#142456" stroke-width="2"/>
+  </symbol>
+  <symbol id="fleur" viewBox="0 0 100 80">
+    <path d="M50 4C58 18 60 32 50 48C40 32 42 18 50 4Z"/>
+    <path d="M46 48C30 46 18 34 24 22C28 16 36 18 36 26C34 22 28 24 30 30C32 38 40 42 46 42Z"/>
+    <path d="M54 48C70 46 82 34 76 22C72 16 64 18 64 26C66 22 72 24 70 30C68 38 60 42 54 42Z"/>
+    <rect x="30" y="46" width="40" height="7" rx="2"/>
+    <path d="M44 53L40 70L50 63L60 70L56 53Z"/>
+  </symbol>
+  <symbol id="arms-m" viewBox="0 0 100 110">
+    <g clip-path="url(#shieldClip)">
+      <rect width="100" height="110" fill="#F2B705"/>
+      <path d="M0 76L50 38L100 76V94L50 56L0 94Z" fill="#17150F"/>
+      <polygon points="28,14 30.6,21.4 38.5,21.5 32.2,26.3 34.5,33.9 28,29.4 21.5,33.9 23.8,26.3 17.5,21.5 25.4,21.4" fill="#17150F"/>
+      <polygon points="72,14 74.6,21.4 82.5,21.5 76.2,26.3 78.5,33.9 72,29.4 65.5,33.9 67.8,26.3 61.5,21.5 69.4,21.4" fill="#17150F"/>
+      <svg x="34" y="66" width="32" height="26" viewBox="0 0 100 80" fill="#17150F"><use href="#fleur"/></svg>
+    </g>
+    <path d="M8 6H92V50C92 78 74 98 50 106C26 98 8 78 8 50Z" fill="none" stroke="#17150F" stroke-width="3"/>
+  </symbol>
+</defs></svg>
+<header class="hero shweshwe">
+  <div class="card">
+    <span class="kicker">Brendon &amp; Jess invite you to the Surname Showdown</span>
+    <h1>Fourie <span class="x">×</span> Mapstone</h1>
+    <div class="teams"><span class="tchip f"><svg viewBox="0 0 100 110" aria-hidden="true"><use href="#arms-f"/></svg><b>Team Fourie</b></span><span class="tchip vs">vs</span><span class="tchip m"><svg viewBox="0 0 100 110" aria-hidden="true"><use href="#arms-m"/></svg><b>Team Mapstone</b></span></div>
     <span class="d">5 – 7 May 2028 · Khotso Lodge, Underberg</span>
     <div class="count" id="count" aria-label="Countdown to the wedding">
       <div><b id="cd-d">–</b><span>days</span></div>
@@ -129,6 +185,7 @@ footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;color:var(--fg
     </div>
   </div>
 </header>
+<div class="band" aria-hidden="true"></div>
 
 <nav aria-label="Sections"><div class="wrap">
   <a href="#story">The idea</a><a href="#weekend">Weekend</a><a href="#games">Games</a><a href="#travel">Getting there</a><a href="#stay">Stay</a><a href="#faq">FAQ</a><a href="leaderboard.html">Leaderboard</a><a href="#rsvp" class="rsvp">RSVP</a>
@@ -137,10 +194,10 @@ footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;color:var(--fg
 <section id="story"><div class="wrap">
   <div class="label">You’re invited</div>
   <h2>One wedding. Two surnames. Only one survives.</h2>
-  <p class="lede">We’re getting married, and we can’t agree whose surname wins. So we’re letting you decide. Join us for a long weekend in the southern Drakensberg where Team Fourie and Team Mapstone battle it out across speeches, a pub quiz, field games and one very sneaky golden egg. The winning name is revealed at the ceremony on Sunday, when the officiant says “I now pronounce you Mr and Mrs…”.</p>
+  <p class="lede">Brendon and Jess are getting married, and we can’t agree whose surname wins. So we’re letting you decide. Join us for a long weekend in the southern Drakensberg where Team Fourie and Team Mapstone battle it out across speeches, a pub quiz, field games and one very sneaky golden egg. The winning name is revealed at the ceremony on Sunday, when the officiant says “I now pronounce you Mr and Mrs…”.</p>
   <div class="sides">
-    <div class="side f"><span class="t">Fourie</span><q>Fast &amp; Fourie-ous</q><p>Royal blue. Mascot: the blue crane.</p></div>
-    <div class="side m"><span class="t">Mapstone</span><q>Set in Stone</q><p>Canary yellow. Mascot: the weaver.</p></div>
+    <div class="side f"><svg viewBox="0 0 100 110" role="img" aria-label="Fourie family arms"><use href="#arms-f"/></svg><span class="t">Fourie</span><q>Fast &amp; Fourie-ous</q><p>Blue and gold, from the family crest.</p></div>
+    <div class="side m"><svg viewBox="0 0 100 110" role="img" aria-label="Mapstone family arms"><use href="#arms-m"/></svg><span class="t">Mapstone</span><q>Set in Stone</q><p>Gold and black, from the family crest.</p></div>
   </div>
   <p class="hint">You’ll find out which team you’re on when you open your goody bag at check-in. Family plays for their own surname; everyone else gets drafted.</p>
 </div></section>
@@ -261,7 +318,8 @@ footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;color:var(--fg
   </div>
 </div></section>
 
-<footer><b>Fourie × Mapstone</b>5 – 7 May 2028 · Khotso Lodge, Underberg</footer>
+<div class="band" aria-hidden="true"></div>
+<footer class="shweshwe foot"><b><span>Brendon &amp; Jess</span></b><span>5 – 7 May 2028 · Khotso Lodge, Underberg</span></footer>
 
 <script src="assets/config.js"></script>
 <script>
