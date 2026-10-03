@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Captains · Fourie × Mapstone</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:ital,wght@0,700;1,900&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/board.css">
+<style>
+.login{max-width:420px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:14px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:10px}
+.panel{display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;min-width:0}
+.ev{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr);gap:14px;align-items:start}
+.ev .ctrl{display:grid;gap:10px}
+.line{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.line input[type=number]{width:6.5rem}
+.line select{width:auto}
+.field{display:grid;gap:4px;min-width:0}
+.field label{font-weight:600;font-size:.9rem}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.picks{display:grid;gap:4px;max-height:420px;overflow:auto;padding-right:4px}
+.pick{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px}
+.pick:hover{background:var(--bg)}
+.pick input{width:18px;height:18px}
+.pick .n{flex:1;min-width:0}
+.warn{color:var(--err);font-size:.8rem;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:500;z-index:10}
+.toast.err{background:var(--err)}
+.saved{color:var(--ok);font-weight:600;font-size:.88rem}
+@media (max-width:700px){.ev,.cols{grid-template-columns:1fr}}
+</style>
+</head><body>
+<header class="top">
+  <div class="wrap bar">
+    <a class="home" href="index.html">Fourie × Mapstone</a>
+    <nav><a href="index.html">Wedding</a><a href="leaderboard.html">Leaderboard</a><a href="captains.html" aria-current="page">Captains</a></nav>
+  </div>
+</header>
+
+<main class="wrap stack">
+  <p class="demo" id="demo" hidden>Demo mode: changes stay in this browser only. The demo PIN is <strong>2028</strong>.</p>
+
+  <section id="login-view" class="stack">
+    <h2>Captains’ room</h2>
+    <form class="login" id="login">
+      <div class="field"><label for="pin">PIN</label><input type="password" id="pin" autocomplete="current-password" required></div>
+      <p class="hint">Captains and referees use the captains’ PIN. The couple’s PIN also unlocks players and the blackout.</p>
+      <p class="warn" id="login-err" role="alert" hidden></p>
+      <button class="btn" type="submit">Enter</button>
+    </form>
+  </section>
+
+  <section id="app" class="stack" hidden>
+    <div class="row-head">
+      <h2>Captains’ room</h2>
+      <div class="line"><span class="pill" id="role-pill"></span><button class="btn ghost" id="logout" type="button">Log out</button></div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="chip on" data-tab="results" role="tab">Results</button>
+      <button class="chip" data-tab="squads" role="tab">Squads</button>
+      <button class="chip" data-tab="bonus" role="tab">Bonus points</button>
+      <button class="chip couple" data-tab="players" role="tab">Players</button>
+      <button class="chip couple" data-tab="settings" role="tab">Blackout</button>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="panel" data-panel="results">
+      <p class="hint">Record each event once it’s over. Tap a winner to fill in the points, or type your own split. A Joker doubles that team’s points for this event.</p>
+      <div id="results" class="stack"></div>
+    </div>
+
+    <!-- SQUADS -->
+    <div class="panel" data-panel="squads" hidden>
+      <div class="card">
+        <div class="cols">
+          <div class="field"><label for="sq-event">Event</label><select id="sq-event"></select></div>
+          <div class="field"><label for="sq-q">Find a player</label><input type="search" id="sq-q"></div>
+        </div>
+        <p class="hint">Tick everyone playing this event. The number after each name is how many events they’re already in; aim for 2 to 4 each.</p>
+        <div class="cols">
+          <div class="stack"><h3><span class="dot df"></span>Fourie <span class="muted" id="sq-cf"></span></h3><div class="picks" id="sq-f"></div></div>
+          <div class="stack"><h3><span class="dot dm"></span>Mapstone <span class="muted" id="sq-cm"></span></h3><div class="picks" id="sq-m"></div></div>
+        </div>
+        <div class="line"><button class="btn" id="sq-save" type="button">Save squad</button><span class="saved" id="sq-saved" hidden>Saved</span></div>
+      </div>
+    </div>
+
+    <!-- BONUS -->
+    <div class="panel" data-panel="bonus" hidden>
+      <form class="card" id="bonus-form">
+        <h3>Give a player bonus points</h3>
+        <p class="hint">For individual feats like golden eggs stolen, quiz MVP or best costume. These count on the player leaderboard only, not the team total.</p>
+        <div class="cols">
+          <div class="field"><label for="b-player">Player</label><select id="b-player" required></select></div>
+          <div class="field"><label for="b-points">Points</label><input type="number" id="b-points" value="1" step="1" required></div>
+        </div>
+        <div class="field"><label for="b-reason">Reason</label><input type="text" id="b-reason" placeholder="Stole 2 golden eggs"></div>
+        <button class="btn" type="submit">Add points</button>
+      </form>
+      <div class="tbl"><table><thead><tr><th>Player</th><th>Team</th><th class="num">Points</th><th>Reason</th><th></th></tr></thead><tbody id="bonus-list"></tbody></table></div>
+    </div>
+
+    <!-- PLAYERS -->
+    <div class="panel" data-panel="players" hidden>
+      <form class="card" id="add-form">
+        <h3>Add players</h3>
+        <p class="hint">One per line: <code>Name, Team, Role, Number</code>. Team is Fourie or Mapstone (leave blank for officials). Role is player, captain or official. Number is optional.</p>
+        <label class="sr" for="add-text">Players to add</label>
+        <textarea id="add-text" rows="6" placeholder="Thandi Fourie, Fourie, captain, 7&#10;James Mapstone, Mapstone, player, 23&#10;Sam Ref, , official"></textarea>
+        <button class="btn" type="submit">Add players</button>
+      </form>
+      <div class="tbl"><table><thead><tr><th>Name</th><th>Team</th><th>Role</th><th class="num">No.</th><th class="num">Events</th><th></th></tr></thead><tbody id="player-list"></tbody></table></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="panel" data-panel="settings" hidden>
+      <div class="card">
+        <h3>Scoreboard blackout</h3>
+        <p id="bo-status"></p>
+        <p class="hint">While the blackout is on, results you record are saved but hidden from the public leaderboard, and individual bonus points are hidden too. You and the captains still see everything here. Plan: switch it on at Saturday 12:30.</p>
+        <div class="line"><button class="btn" id="bo-toggle" type="button"></button></div>
+      </div>
+      <div class="card">
+        <h3>The reveal</h3>
+        <p class="hint">After the ceremony, reveal every sealed result on the public leaderboard and switch the blackout off.</p>
+        <div class="line"><button class="btn danger" id="reveal" type="button">Reveal all results</button><span class="warn" id="reveal-confirm" hidden>Tap again to confirm</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/store.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+let pin = "", role = null, db = null, tab = "results";
+
+function toast(msg, isErr) {
+  const t = $("toast"); t.textContent = msg; t.className = "toast" + (isErr ? " err" : ""); t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600);
+}
+async function act(action, payload, okMsg) {
+  try {
+    await Wedding.call(action, Object.assign({ pin }, payload));
+    await refresh();
+    if (okMsg) toast(okMsg);
+    return true;
+  } catch (err) { toast(err.message, true); return false; }
+}
+async function refresh() { db = await Wedding.call("state", { pin }); render(); }
+const playerName = id => (db.players.find(p => p.id === id) || {}).name || "Removed player";
+const eventCounts = () => db.squads.reduce((m, s) => (m[s.playerId] = (m[s.playerId] || 0) + 1, m), {});
+
+// ---------- login ----------
+$("demo").hidden = !Wedding.isDemo();
+$("login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const tryPin = $("pin").value.trim();
+  try {
+    const out = await Wedding.call("login", { pin: tryPin });
+    if (!out.role) throw new Error("That PIN didn’t work.");
+    pin = tryPin; role = out.role;
+    try { sessionStorage.setItem("fm-pin", pin); } catch (_) {}
+    await enter();
+  } catch (err) { $("login-err").textContent = err.message; $("login-err").hidden = false; }
+});
+$("logout").addEventListener("click", () => { try { sessionStorage.removeItem("fm-pin"); } catch (_) {} location.reload(); });
+async function enter() {
+  $("login-view").hidden = true; $("app").hidden = false;
+  $("role-pill").textContent = role === "couple" ? "Couple" : "Captain";
+  document.querySelectorAll(".chip.couple").forEach(b => (b.hidden = role !== "couple"));
+  await refresh();
+}
+(async () => {
+  let saved = ""; try { saved = sessionStorage.getItem("fm-pin") || ""; } catch (_) {}
+  if (!saved) return;
+  try { const out = await Wedding.call("login", { pin: saved }); if (out.role) { pin = saved; role = out.role; await enter(); } } catch (_) {}
+})();
+
+// ---------- tabs ----------
+document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => {
+  tab = b.dataset.tab;
+  document.querySelectorAll("[data-tab]").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll("[data-panel]").forEach(p => (p.hidden = p.dataset.panel !== tab));
+}));
+
+// ---------- render ----------
+function render() {
+  renderResults(); renderSquadOptions(); renderSquad(); renderBonus(); renderPlayers(); renderSettings();
+}
+
+function renderResults() {
+  const res = Object.fromEntries(db.results.map(r => [r.eventId, r]));
+  $("results").innerHTML = db.events.map(e => {
+    const r = res[e.id] || {};
+    const done = !!res[e.id];
+    return `<div class="card ev" data-ev="${esc(e.id)}" data-pts="${e.points}">
+      <div class="stack" style="gap:4px"><h3>${esc(e.name)}</h3><span class="muted">${esc(e.day)} · worth ${e.points}</span>
+        ${done ? `<span class="saved">Recorded${r.public === false ? " (sealed)" : ""}</span>` : '<span class="muted">Not recorded</span>'}</div>
+      <div class="ctrl">
+        <div class="line">
+          <button class="btn f" type="button" data-quick="F">Fourie win</button>
+          <button class="btn m" type="button" data-quick="M">Mapstone win</button>
+          <button class="btn ghost" type="button" data-quick="D">Draw</button>
+        </div>
+        <div class="line">
+          <label for="f-${esc(e.id)}">Fourie</label><input type="number" id="f-${esc(e.id)}" data-k="f" value="${done ? r.fouriePts : ""}" step="1">
+          <label for="m-${esc(e.id)}">Mapstone</label><input type="number" id="m-${esc(e.id)}" data-k="m" value="${done ? r.mapstonePts : ""}" step="1">
+          <label for="j-${esc(e.id)}">Joker</label>
+          <select id="j-${esc(e.id)}" data-k="j"><option value="">None</option><option ${r.joker === "Fourie" ? "selected" : ""}>Fourie</option><option ${r.joker === "Mapstone" ? "selected" : ""}>Mapstone</option></select>
+        </div>
+        <label class="sr" for="n-${esc(e.id)}">Note</label>
+        <input type="text" id="n-${esc(e.id)}" data-k="n" placeholder="Note (optional)" value="${esc(r.note || "")}">
+        <div class="line"><button class="btn" type="button" data-save>Save result</button>${done ? '<button class="btn danger" type="button" data-clear>Clear</button>' : ""}</div>
+      </div></div>`;
+  }).join("");
+}
+$("results").addEventListener("click", e => {
+  const card = e.target.closest("[data-ev]"); if (!card) return;
+  const id = card.dataset.ev, pts = +card.dataset.pts;
+  const f = card.querySelector('[data-k="f"]'), m = card.querySelector('[data-k="m"]');
+  const q = e.target.dataset.quick;
+  if (q) { f.value = q === "F" ? pts : q === "D" ? pts / 2 : 0; m.value = q === "M" ? pts : q === "D" ? pts / 2 : 0; return; }
+  if ("save" in e.target.dataset) {
+    if (f.value === "" && m.value === "") return toast("Pick a winner or enter points first.", true);
+    act("saveResult", { eventId: id, fouriePts: +f.value || 0, mapstonePts: +m.value || 0, joker: card.querySelector('[data-k="j"]').value, note: card.querySelector('[data-k="n"]').value }, "Result saved");
+  }
+  if ("clear" in e.target.dataset) act("saveResult", { eventId: id, clear: true }, "Result cleared");
+});
+
+function renderSquadOptions() {
+  const sel = $("sq-event"), cur = sel.value;
+  sel.innerHTML = db.events.map(e => `<option value="${esc(e.id)}">${esc(e.name)} (${esc(e.day)})</option>`).join("");
+  if (cur) sel.value = cur;
+}
+function renderSquad() {
+  const ev = $("sq-event").value, q = $("sq-q").value.trim().toLowerCase();
+  const inSquad = new Set(db.squads.filter(s => s.eventId === ev).map(s => s.playerId));
+  const counts = eventCounts();
+  const list = team => db.players.filter(p => p.team === team && (!q || p.name.toLowerCase().includes(q)))
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(p => { const n = counts[p.id] || 0; return `<label class="pick"><input type="checkbox" value="${esc(p.id)}" ${inSquad.has(p.id) ? "checked" : ""}><span class="n">${esc(p.name)}</span><span class="${n > 4 ? "warn" : "muted"}">${n}</span></label>`; }).join("")
+    || '<p class="muted">No players yet.</p>';
+  $("sq-f").innerHTML = list("Fourie"); $("sq-m").innerHTML = list("Mapstone");
+  updateSquadCounts(); $("sq-saved").hidden = true;
+}
+function updateSquadCounts() {
+  $("sq-cf").textContent = "(" + $("sq-f").querySelectorAll("input:checked").length + " picked)";
+  $("sq-cm").textContent = "(" + $("sq-m").querySelectorAll("input:checked").length + " picked)";
+}
+$("sq-event").addEventListener("change", renderSquad);
+$("sq-q").addEventListener("input", renderSquad);
+["sq-f", "sq-m"].forEach(id => $(id).addEventListener("change", () => { updateSquadCounts(); $("sq-saved").hidden = true; }));
+$("sq-save").addEventListener("click", async () => {
+  const ev = $("sq-event").value;
+  // Players hidden by the search box keep their current squad status.
+  const visible = new Set([...document.querySelectorAll("#sq-f input, #sq-m input")].map(i => i.value));
+  const kept = db.squads.filter(s => s.eventId === ev && !visible.has(s.playerId)).map(s => s.playerId);
+  const picked = [...document.querySelectorAll("#sq-f input:checked, #sq-m input:checked")].map(i => i.value);
+  if (await act("saveSquad", { eventId: ev, playerIds: kept.concat(picked) }, "Squad saved")) $("sq-saved").hidden = false;
+});
+
+function renderBonus() {
+  const sel = $("b-player"), cur = sel.value;
+  sel.innerHTML = '<option value="">Choose a player</option>' + db.players.filter(p => p.team).sort((a, b) => a.name.localeCompare(b.name))
+    .map(p => `<option value="${esc(p.id)}">${esc(p.name)} (${esc(p.team)})</option>`).join("");
+  if (cur) sel.value = cur;
+  $("bonus-list").innerHTML = db.bonuses.length ? db.bonuses.slice().reverse().map(b => {
+    const p = db.players.find(x => x.id === b.playerId) || {};
+    return `<tr><td>${esc(playerName(b.playerId))}</td><td>${esc(p.team || "")}</td><td class="num">${b.points}</td><td>${esc(b.reason)}</td><td class="num"><button class="btn ghost" type="button" data-del-bonus="${esc(b.id)}">Remove</button></td></tr>`;
+  }).join("") : '<tr><td colspan="5" class="muted">No bonus points yet.</td></tr>';
+}
+$("bonus-form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!$("b-player").value) return toast("Choose a player first.", true);
+  act("addBonus", { playerId: $("b-player").value, points: +$("b-points").value || 0, reason: $("b-reason").value }, "Points added")
+    .then(ok => { if (ok) $("b-reason").value = ""; });
+});
+$("bonus-list").addEventListener("click", e => { const id = e.target.dataset.delBonus; if (id) act("deleteBonus", { id }, "Removed"); });
+
+function renderPlayers() {
+  if (role !== "couple") return;
+  const counts = eventCounts();
+  const opt = (v, cur, label) => `<option value="${v}" ${v === cur ? "selected" : ""}>${label || v || "None"}</option>`;
+  $("player-list").innerHTML = db.players.length ? db.players.slice().sort((a, b) => a.name.localeCompare(b.name)).map(p => `<tr data-pid="${esc(p.id)}">
+    <td>${esc(p.name)}</td>
+    <td><label class="sr" for="pt-${esc(p.id)}">Team</label><select id="pt-${esc(p.id)}" data-field="team">${opt("Fourie", p.team)}${opt("Mapstone", p.team)}${opt("", p.team, "No team")}</select></td>
+    <td><label class="sr" for="pr-${esc(p.id)}">Role</label><select id="pr-${esc(p.id)}" data-field="role">${opt("player", p.role, "Player")}${opt("captain", p.role, "Captain")}${opt("official", p.role, "Official")}</select></td>
+    <td class="num">${esc(p.number)}</td><td class="num">${counts[p.id] || 0}</td>
+    <td class="num"><button class="btn danger" type="button" data-del-player>Remove</button></td></tr>`).join("")
+    : '<tr><td colspan="6" class="muted">No players yet. Add them above.</td></tr>';
+}
+$("player-list").addEventListener("change", e => {
+  const tr = e.target.closest("[data-pid]"); const f = e.target.dataset.field;
+  if (tr && f) act("updatePlayer", { player: { id: tr.dataset.pid, [f]: e.target.value } }, "Saved");
+});
+$("player-list").addEventListener("click", e => {
+  if (!("delPlayer" in e.target.dataset)) return;
+  const tr = e.target.closest("[data-pid]");
+  if (e.target.dataset.armed) return act("deletePlayer", { id: tr.dataset.pid }, "Player removed");
+  e.target.dataset.armed = "1"; e.target.textContent = "Tap to confirm";
+  setTimeout(() => { if (e.target.isConnected) { delete e.target.dataset.armed; e.target.textContent = "Remove"; } }, 4000);
+});
+$("add-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const players = $("add-text").value.split("\n").map(l => l.split(",").map(s => s.trim())).filter(a => a[0])
+    .map(([name, team = "", r = "player", number = ""]) => {
+      const t = team.toLowerCase().startsWith("f") ? "Fourie" : team.toLowerCase().startsWith("m") ? "Mapstone" : "";
+      const rl = ["player", "captain", "official"].includes(r.toLowerCase()) ? r.toLowerCase() : "player";
+      return { name, team: t, role: rl, number };
+    });
+  if (!players.length) return toast("Add at least one name.", true);
+  act("addPlayers", { players }, players.length + " added").then(ok => { if (ok) $("add-text").value = ""; });
+});
+
+function renderSettings() {
+  if (role !== "couple") return;
+  const on = db.settings.blackout;
+  $("bo-status").innerHTML = on ? "<strong>The blackout is ON.</strong> The public leaderboard is frozen." : "<strong>The blackout is off.</strong> Results show on the public leaderboard as soon as they’re saved.";
+  $("bo-toggle").textContent = on ? "Switch blackout off" : "Switch blackout on";
+}
+$("bo-toggle").addEventListener("click", () => act("setBlackout", { on: !db.settings.blackout }, "Blackout updated"));
+$("reveal").addEventListener("click", () => {
+  const c = $("reveal-confirm");
+  if (c.hidden) { c.hidden = false; setTimeout(() => (c.hidden = true), 4000); return; }
+  c.hidden = true; act("revealAll", {}, "All results revealed");
+});
+</script>
+</body></html>

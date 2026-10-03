@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Leaderboard · Fourie × Mapstone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:ital,wght@0,700;1,900&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/board.css">
+</head><body>
+<header class="top">
+  <div class="wrap bar">
+    <a class="home" href="index.html">Fourie × Mapstone</a>
+    <nav><a href="index.html">Wedding</a><a href="leaderboard.html" aria-current="page">Leaderboard</a><a href="captains.html">Captains</a></nav>
+  </div>
+</header>
+
+<main class="wrap stack">
+  <p class="demo" id="demo" hidden>Demo mode: these are example names and scores. Real ones appear once the Google Sheet is connected.</p>
+
+  <section class="score" aria-label="Team totals">
+    <div class="team f"><span class="tname">Fourie</span><span class="pts" id="t-f">0</span><span class="tsub">The Blue Cranes</span></div>
+    <div class="midcol"><span class="vs">VS</span><span class="of" id="of">of 145</span></div>
+    <div class="team m"><span class="tname">Mapstone</span><span class="pts" id="t-m">0</span><span class="tsub">The Weavers</span></div>
+  </section>
+  <div class="tug" aria-hidden="true"><i id="tug-f"></i><i id="tug-m"></i></div>
+  <p class="dark" id="dark" hidden>The scoreboard has gone dark. Results from here on are sealed until the ceremony on Sunday, when the officiant reveals the winning surname.</p>
+
+  <section class="stack">
+    <h2>Event by event</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Event</th><th>Day</th><th class="num">Worth</th><th class="num">Fourie</th><th class="num">Mapstone</th><th>Result</th></tr></thead>
+      <tbody id="events"></tbody>
+    </table></div>
+  </section>
+
+  <section class="stack">
+    <div class="row-head">
+      <h2>Player leaderboard</h2>
+      <div class="filters" role="group" aria-label="Filter players">
+        <button type="button" class="chip on" data-team="">All</button>
+        <button type="button" class="chip" data-team="Fourie">Fourie</button>
+        <button type="button" class="chip" data-team="Mapstone">Mapstone</button>
+      </div>
+    </div>
+    <p class="hint">Players earn their team’s points for every event they played in, plus individual bonus points (like golden eggs stolen). Bonus points don’t count toward the team total.</p>
+    <label class="sr" for="q">Search players</label>
+    <input id="q" type="search" placeholder="Find a player">
+    <div class="tbl"><table>
+      <thead><tr><th class="num">#</th><th>Player</th><th>Team</th><th class="num">Events</th><th class="num">Bonus</th><th class="num">Points</th></tr></thead>
+      <tbody id="players"></tbody>
+    </table></div>
+  </section>
+  <p class="hint" id="updated"></p>
+</main>
+
+<script src="assets/config.js"></script>
+<script src="assets/store.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let state = null, filterTeam = "";
+
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+function render() {
+  if (!state) return;
+  const c = Wedding.compute(state);
+  $("t-f").textContent = c.totals.Fourie;
+  $("t-m").textContent = c.totals.Mapstone;
+  $("of").textContent = "of " + c.maxPoints;
+  const sum = c.totals.Fourie + c.totals.Mapstone;
+  $("tug-f").style.flex = sum ? c.totals.Fourie : 1;
+  $("tug-m").style.flex = sum ? c.totals.Mapstone : 1;
+  $("dark").hidden = !state.settings.blackout;
+
+  $("events").innerHTML = state.events.map(e => {
+    const r = c.byEvent[e.id];
+    let result = '<span class="muted">Not played yet</span>';
+    if (r) {
+      const w = r.Fourie > r.Mapstone ? "Fourie" : r.Mapstone > r.Fourie ? "Mapstone" : "";
+      result = w ? `<span class="pill ${w === "Fourie" ? "pf" : "pm"}">${w} win</span>` : '<span class="pill">Shared</span>';
+      if (r.raw.joker) result += ` <span class="pill joker">${esc(r.raw.joker)} Joker ×2</span>`;
+    } else if (state.settings.blackout) {
+      result = '<span class="muted">Sealed</span>';
+    }
+    return `<tr><td>${esc(e.name)}</td><td>${esc(e.day)}</td><td class="num">${e.points}</td><td class="num">${r ? r.Fourie : "–"}</td><td class="num">${r ? r.Mapstone : "–"}</td><td>${result}</td></tr>`;
+  }).join("");
+
+  const q = $("q").value.trim().toLowerCase();
+  const rows = c.playerRows.filter(r => (!filterTeam || r.player.team === filterTeam) && (!q || r.player.name.toLowerCase().includes(q)));
+  $("players").innerHTML = rows.length ? rows.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.player.name)}${r.player.role === "captain" ? ' <span class="pill">Captain</span>' : ""}</td><td><span class="dot ${r.player.team === "Fourie" ? "df" : "dm"}"></span>${esc(r.player.team)}</td><td class="num">${r.events}</td><td class="num">${r.bonus}</td><td class="num strong">${r.points}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="muted">${state.players.length ? "No players match." : "Players appear here once the couple adds them on the Captains page."}</td></tr>`;
+}
+
+async function load() {
+  try {
+    state = await Wedding.call("state");
+    $("updated").textContent = "Updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) + ". Refreshes every minute.";
+    render();
+  } catch (err) {
+    $("updated").textContent = "Couldn’t load the scores just now. Trying again in a minute.";
+  }
+}
+
+$("demo").hidden = !Wedding.isDemo();
+document.querySelectorAll(".chip[data-team]").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".chip[data-team]").forEach(x => x.classList.toggle("on", x === b));
+  filterTeam = b.dataset.team; render();
+}));
+$("q").addEventListener("input", render);
+load();
+setInterval(load, 60000);
+</script>
+</body></html>

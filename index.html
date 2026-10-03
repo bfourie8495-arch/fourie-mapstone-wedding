@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fourie × Mapstone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:ital,wght@0,700;1,900&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one long invitation page. Split blue/yellow hero with countdown, sticky nav, then content sections on a warm paper ground, RSVP form near the end. */
+:root{
+  --bg:#f8f5ee; --surface:#ffffff; --fg:#1a1d29; --muted:#5d6170; --line:#e4ded2;
+  --blue:#1C3FD1; --midnight:#0A1450; --canary:#FFD60A; --ink:#141414; --accent:#C2546E;
+  --slab:"Alfa Slab One", Rockwell, Georgia, serif;
+  --cond:"Barlow Condensed", "Arial Narrow", sans-serif;
+  --body:"Barlow", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11131a;--surface:#1a1d27;--fg:#eeede8;--muted:#a6a9b4;--line:#2c303d;--accent:#E9839B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11131a;--surface:#1a1d27;--fg:#eeede8;--muted:#a6a9b4;--line:#2c303d;--accent:#E9839B;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.02}
+h2{font-family:var(--slab);font-weight:400;font-size:clamp(2rem,5vw,3rem);text-transform:uppercase}
+h3{font-family:var(--cond);font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
+p{margin:0}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+.label{font-family:var(--cond);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.82rem;color:var(--accent)}
+.lede{color:var(--muted);max-width:62ch;font-size:1.08rem}
+section{padding-block:80px 0;scroll-margin-top:60px}
+section > .wrap{display:grid;gap:22px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1fr 1fr;position:relative;min-height:520px}
+.hero .s{display:grid;align-content:center;padding:48px 28px;gap:8px}
+.hero .sf{background:var(--blue);color:#fff;justify-items:end;text-align:right}
+.hero .sm{background:var(--canary);color:var(--ink)}
+.hero .nm{font-family:var(--slab);font-size:clamp(2.4rem,7.5vw,5.4rem);line-height:.9;text-transform:uppercase}
+.hero .sub{font-family:var(--cond);font-style:italic;font-weight:900;font-size:clamp(1rem,2vw,1.35rem);text-transform:uppercase;letter-spacing:.06em}
+.hero .center{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:18px 26px;border-radius:14px;text-align:center;display:grid;gap:6px;width:min(560px,calc(100% - 40px));box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.hero .center .d{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.95rem}
+.count{display:flex;justify-content:center;gap:18px;font-variant-numeric:tabular-nums}
+.count div{display:grid;justify-items:center}
+.count b{font-family:var(--slab);font-weight:400;font-size:clamp(1.6rem,4vw,2.2rem);line-height:1}
+.count span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#bbb}
+.vs{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) skewX(-10deg);background:#fff;color:var(--ink);font-family:var(--slab);font-size:clamp(1.6rem,4vw,2.6rem);padding:2px 16px 6px;border:4px solid var(--ink)}
+
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px 22px;flex-wrap:wrap;justify-content:center;padding-block:12px}
+nav a{font-family:var(--cond);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.88rem;text-decoration:none;color:var(--muted)}
+nav a:hover,nav a:focus-visible{color:var(--fg)}
+nav a.rsvp{color:var(--accent)}
+
+/* sides */
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.side{border-radius:16px;padding:24px;display:grid;gap:8px}
+.side.f{background:var(--blue);color:#fff}
+.side.m{background:var(--canary);color:var(--ink)}
+.side .t{font-family:var(--slab);font-size:2rem;text-transform:uppercase;line-height:1}
+.side q{font-family:var(--cond);font-style:italic;font-weight:900;font-size:1.3rem;text-transform:uppercase;quotes:none}
+
+/* schedule */
+.days{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:12px;align-content:start}
+.day .dt{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.85rem;color:var(--muted)}
+.day ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.day li{display:grid;grid-template-columns:3.4rem 1fr;gap:8px;font-size:.97rem}
+.day li time{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+
+/* games */
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.game{border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:6px;background:var(--surface)}
+.game p{color:var(--muted);font-size:.95rem}
+.game.gold{background:linear-gradient(135deg,#3a2c05,#140f03);color:#fff1c4;border-color:#b8860b}
+.game.gold p{color:#e0cf98}
+
+/* info */
+.info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:10px;align-content:start;min-width:0}
+.box ul{margin:0;padding-left:1.1em;display:grid;gap:4px;color:var(--muted)}
+.box p{color:var(--muted)}
+
+/* rsvp */
+form{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;display:grid;gap:20px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:grid;gap:6px;min-width:0}
+label,.legend{font-weight:600;font-size:.95rem}
+input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+fieldset{border:0;padding:0;margin:0;display:grid;gap:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.opt span{display:inline-block;border:1.5px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.93rem;background:var(--bg)}
+.opt input:checked + span{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.opt input:focus-visible + span{outline:3px solid var(--blue);outline-offset:2px}
+.hint{font-size:.85rem;color:var(--muted)}
+button{font-family:var(--cond);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:1.05rem;background:var(--fg);color:var(--bg);border:0;border-radius:999px;padding:14px 28px;cursor:pointer;justify-self:start}
+.done{border-radius:12px;padding:16px 18px;background:color-mix(in srgb,var(--accent) 12%,var(--surface));border:1px solid var(--accent)}
+
+details{border-bottom:1px solid var(--line);padding-block:14px}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin-top:8px}
+footer{padding-block:72px 56px;text-align:center;color:var(--muted);font-size:.9rem}
+footer b{font-family:var(--slab);font-weight:400;font-size:1.4rem;color:var(--fg);display:block;margin-bottom:6px}
+
+@media (max-width:760px){
+  .days,.info,.sides,.row{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .hero{grid-template-columns:1fr;min-height:0}
+  .hero .s{padding:40px 20px}
+  .hero .sf{justify-items:start;text-align:left}
+  .hero .center{position:static;transform:none;width:auto;border-radius:0}
+  .vs{top:33%}
+  form{padding:20px}
+}
+</style>
+</head><body>
+
+<header class="hero">
+  <div class="s sf"><span class="nm">Fourie</span><span class="sub">The Blue Cranes</span></div>
+  <div class="s sm"><span class="nm">Mapstone</span><span class="sub">The Weavers</span></div>
+  <div class="vs" aria-hidden="true">VS</div>
+  <div class="center">
+    <span class="d">5 – 7 May 2028 · Khotso Lodge, Underberg</span>
+    <div class="count" id="count" aria-label="Countdown to the wedding">
+      <div><b id="cd-d">–</b><span>days</span></div>
+      <div><b id="cd-h">–</b><span>hours</span></div>
+      <div><b id="cd-m">–</b><span>min</span></div>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="Sections"><div class="wrap">
+  <a href="#story">The idea</a><a href="#weekend">Weekend</a><a href="#games">Games</a><a href="#travel">Getting there</a><a href="#stay">Stay</a><a href="#faq">FAQ</a><a href="leaderboard.html">Leaderboard</a><a href="#rsvp" class="rsvp">RSVP</a>
+</div></nav>
+
+<section id="story"><div class="wrap">
+  <div class="label">You’re invited</div>
+  <h2>One wedding. Two surnames. Only one survives.</h2>
+  <p class="lede">We’re getting married, and we can’t agree whose surname wins. So we’re letting you decide. Join us for a long weekend in the southern Drakensberg where Team Fourie and Team Mapstone battle it out across speeches, a pub quiz, field games and one very sneaky golden egg. The winning name is revealed at the ceremony on Sunday, when the officiant says “I now pronounce you Mr and Mrs…”.</p>
+  <div class="sides">
+    <div class="side f"><span class="t">Fourie</span><q>Fast &amp; Fourie-ous</q><p>Royal blue. Mascot: the blue crane.</p></div>
+    <div class="side m"><span class="t">Mapstone</span><q>Set in Stone</q><p>Canary yellow. Mascot: the weaver.</p></div>
+  </div>
+  <p class="hint">You’ll find out which team you’re on when you open your goody bag at check-in. Family plays for their own surname; everyone else gets drafted.</p>
+</div></section>
+
+<section id="weekend"><div class="wrap">
+  <div class="label">The weekend</div>
+  <h2>Three days in the Berg</h2>
+  <div class="days">
+    <div class="day"><span class="dt">Friday 5 May</span><h3>Rally Night</h3>
+      <ol><li><time>14:00</time>Arrive, check in, pitch tents, open goody bags</li><li><time>17:00</time>Sundowners by the fire</li><li><time>18:30</time>Dinner</li><li><time>19:30</time>Rally speeches, then the General Election</li><li><time>20:00</time>Pub quiz</li><li><time>21:45</time>Drinking games</li></ol></div>
+    <div class="day"><span class="dt">Saturday 6 May</span><h3>Games Day</h3>
+      <ol><li><time>07:00</time>5 km run or walk</li><li><time>08:00</time>Bacon and egg rolls</li><li><time>10:30</time>Touch rugby, tug of war</li><li><time>13:30</time>Capture the flag</li><li><time>17:30</time>Reception drinks</li><li><time>18:30</time>Dinner, speeches, party</li></ol></div>
+    <div class="day"><span class="dt">Sunday 7 May</span><h3>The Reveal</h3>
+      <ol><li><time>10:00</time>Coffee and gathering</li><li><time>10:30</time>Ceremony and surname reveal</li><li><time>11:15</time>Brunch</li><li><time>13:00</time>Farewells</li></ol></div>
+  </div>
+  <p class="hint">Times are a guide and may shift a little closer to the date.</p>
+</div></section>
+
+<section id="games"><div class="wrap">
+  <div class="label">The competition</div>
+  <h2>How you win it for your side</h2>
+  <div class="games">
+    <div class="game"><h3>General Election</h3><p>Friday night after the speeches. Secret ballot for the best surname. You can vote for the other side, if they’ve earned it.</p></div>
+    <div class="game"><h3>Pub Quiz</h3><p>Six rounds, including how well you know the couple and each family’s trivia about the other.</p></div>
+    <div class="game"><h3>Field Games</h3><p>5 km run, touch rugby, tug of war and capture the flag. Everyone plays at least two events.</p></div>
+    <div class="game"><h3>Party Games</h3><p>Flip cup, beer pong and more. Every drinking game has a non-alcoholic option that scores the same.</p></div>
+    <div class="game gold"><h3>The Golden Egg</h3><p>Everyone gets a golden egg to wear all weekend. Protect yours, steal theirs, and bring them back to your team’s nest. No tackling.</p></div>
+  </div>
+</div></section>
+
+<section id="travel"><div class="wrap">
+  <div class="label">Getting there</div>
+  <h2>Khotso Lodge, Underberg</h2>
+  <div class="info">
+    <div class="box"><h3>By road</h3>
+      <ul><li>From Durban: about 2.5–3 hours via the N3 and R617.</li><li>From Pietermaritzburg: about 2 hours.</li><li>From Johannesburg: about 6 hours.</li><li>Fill up in Underberg; the last stretch is on farm roads.</li></ul>
+    </div>
+    <div class="box"><h3>Flying in</h3>
+      <p>Fly into King Shaka International (Durban) and hire a car or join the shared shuttle. Tell us in your RSVP if you’d use a shuttle and we’ll organise one if there’s enough interest.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="stay"><div class="wrap">
+  <div class="label">Where to stay</div>
+  <h2>Camp or cosy up</h2>
+  <div class="info">
+    <div class="box"><h3>Camping</h3><p>Most of us will be camping. Khotso’s campsite has hosted 150 people at once, right by the river. Bring your tent and the warmest sleeping bag you own: May nights in Underberg get close to freezing. Camping rates will be shared once confirmed with the lodge.</p></div>
+    <div class="box"><h3>Beds</h3><p>Khotso has about 50 beds: a log cabin for up to 20 and rondavels and lodge rooms for about 30. These will go fast, so tell us in your RSVP if you need a bed. There are also guesthouses in Underberg town, a short drive away.</p></div>
+    <div class="box"><h3>What to pack</h3><ul><li>Warm layers, beanie and gloves for evenings</li><li>Trainers for game day, plus a change of clothes</li><li>Sunscreen and a hat (the mountain sun is strong)</li><li>Something nice for Saturday night and Sunday</li><li>Headlamp or torch</li></ul></div>
+    <div class="box"><h3>Dress code</h3><ul><li>Friday: casual and warm</li><li>Saturday day: sports kit in your team colours</li><li>Saturday night: smart casual, party ready</li><li>Sunday ceremony: Sunday best (layers welcome)</li></ul></div>
+  </div>
+</div></section>
+
+<section id="rsvp"><div class="wrap">
+  <div class="label">RSVP</div>
+  <h2>Are you in?</h2>
+  <p class="lede">Please reply by <strong>31 January 2028</strong>. One form per person, so we can get team numbers and kit sizes right.</p>
+  <form id="rsvp-form" novalidate>
+    <div class="row">
+      <div class="field"><label for="f-name">Full name</label><input type="text" id="f-name" name="name" autocomplete="name" required></div>
+      <div class="field"><label for="f-email">Email</label><input type="email" id="f-email" name="email" autocomplete="email" required></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="f-phone">Mobile</label><input type="tel" id="f-phone" name="phone" autocomplete="tel"></div>
+      <div class="field"><label for="f-side">How do you know us?</label>
+        <select id="f-side" name="side"><option value="">Choose one</option><option>Fourie family</option><option>Mapstone family</option><option>Friend</option><option>Plus-one of a guest</option></select></div>
+    </div>
+    <fieldset><span class="legend" id="lg-att">Will you be there?</span>
+      <div class="opts" role="radiogroup" aria-labelledby="lg-att">
+        <label class="opt"><input type="radio" id="att-yes" name="attending" value="yes" required><span>Wouldn’t miss it</span></label>
+        <label class="opt"><input type="radio" id="att-no" name="attending" value="no"><span>Sadly can’t make it</span></label>
+      </div></fieldset>
+    <fieldset id="days-set"><span class="legend" id="lg-days">Which days?</span>
+      <div class="opts" aria-labelledby="lg-days">
+        <label class="opt"><input type="checkbox" id="d-fri" name="days" value="Fri" checked><span>Friday</span></label>
+        <label class="opt"><input type="checkbox" id="d-sat" name="days" value="Sat" checked><span>Saturday</span></label>
+        <label class="opt"><input type="checkbox" id="d-sun" name="days" value="Sun" checked><span>Sunday</span></label>
+      </div></fieldset>
+    <div class="row">
+      <div class="field"><label for="f-stay">Where will you sleep?</label>
+        <select id="f-stay" name="stay"><option value="">Choose one</option><option>Camping</option><option>Lodge room</option><option>Staying nearby</option><option>Not sure yet</option></select></div>
+      <div class="field"><label for="f-size">T-shirt size</label>
+        <select id="f-size" name="size"><option value="">Choose one</option><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>XXL</option><option>3XL</option><option>Kids</option></select></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="f-diet">Dietary needs</label><input type="text" id="f-diet" name="diet" placeholder="Vegetarian, allergies, halaal…"></div>
+      <div class="field"><label for="f-kids">Kids coming with you</label><input type="text" id="f-kids" name="kids" placeholder="Names and ages, if any"></div>
+    </div>
+    <fieldset><span class="legend" id="lg-run">Up for the 5 km run on Saturday morning?</span>
+      <div class="opts" aria-labelledby="lg-run">
+        <label class="opt"><input type="radio" id="run-run" name="run" value="run"><span>Running it</span></label>
+        <label class="opt"><input type="radio" id="run-walk" name="run" value="walk"><span>Walking it</span></label>
+        <label class="opt"><input type="radio" id="run-cheer" name="run" value="cheer"><span>Cheering with coffee</span></label>
+      </div></fieldset>
+    <div class="row">
+      <div class="field"><label for="f-shuttle">Would you use a shuttle from Durban?</label>
+        <select id="f-shuttle" name="shuttle"><option value="">Choose one</option><option>Yes</option><option>Maybe</option><option>No, I’m driving</option></select></div>
+      <div class="field"><label for="f-song">A song that gets you on the dance floor</label><input type="text" id="f-song" name="song"></div>
+    </div>
+    <div class="field"><label for="f-note">Anything else?</label><textarea id="f-note" name="note" rows="3"></textarea></div>
+    <p class="hint" id="f-err" role="alert" hidden></p>
+    <button type="submit" id="f-submit">Send RSVP</button>
+    <div class="done" id="f-done" hidden></div>
+  </form>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="label">Questions</div>
+  <h2>Good to know</h2>
+  <div>
+    <details><summary>Do I have to compete?</summary><p>Not at all. There are cheering, refereeing and scorekeeping jobs too, and the Golden Egg is about sneakiness, not fitness.</p></details>
+    <details><summary>Can I choose my team?</summary><p>Family plays for their own surname. Everyone else gets drafted by the captains in February 2028. Bribes to the captains are welcome but not guaranteed to work.</p></details>
+    <details><summary>Are kids welcome?</summary><p>Yes. Kids get their own events that still score points for their team.</p></details>
+    <details><summary>Can I bring a plus-one?</summary><p>If your invitation names a plus-one, yes. Ask them to fill in their own RSVP so they get their own kit.</p></details>
+    <details><summary>What about gifts?</summary><p>Your company for the weekend is the gift. Registry details, if any, will be added here closer to the time.</p></details>
+    <details><summary>What if the weather turns?</summary><p>Every outdoor event has an indoor backup. Pack warm either way.</p></details>
+  </div>
+</div></section>
+
+<footer><b>Fourie × Mapstone</b>5 – 7 May 2028 · Khotso Lodge, Underberg</footer>
+
+<script src="assets/config.js"></script>
+<script>
+const RSVP_ENDPOINT = (window.WEDDING_API || "").trim();
+
+(function countdown(){
+  const target = new Date("2028-05-05T14:00:00+02:00").getTime();
+  const d = document.getElementById("cd-d"), h = document.getElementById("cd-h"), m = document.getElementById("cd-m");
+  function tick(){
+    let ms = Math.max(0, target - Date.now());
+    const days = Math.floor(ms / 864e5); ms -= days * 864e5;
+    const hrs = Math.floor(ms / 36e5); ms -= hrs * 36e5;
+    d.textContent = days; h.textContent = hrs; m.textContent = Math.floor(ms / 6e4);
+  }
+  tick(); setInterval(tick, 30000);
+})();
+
+(function rsvp(){
+  const form = document.getElementById("rsvp-form");
+  const err = document.getElementById("f-err"), done = document.getElementById("f-done"), btn = document.getElementById("f-submit");
+  const daysSet = document.getElementById("days-set");
+  form.addEventListener("change", e => {
+    if (e.target.name === "attending") daysSet.hidden = e.target.value === "no";
+  });
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    err.hidden = true;
+    const fd = new FormData(form);
+    const missing = [];
+    if (!fd.get("name")?.trim()) missing.push("your name");
+    if (!/^\S+@\S+\.\S+$/.test(fd.get("email") || "")) missing.push("a valid email");
+    if (!fd.get("attending")) missing.push("whether you’re coming");
+    if (missing.length){ err.textContent = "Please add " + missing.join(", ") + "."; err.hidden = false; return; }
+    const data = Object.fromEntries(fd.entries());
+    data.days = fd.getAll("days").join(", ");
+    data.submitted = new Date().toISOString();
+    const first = data.name.trim().split(" ")[0];
+    if (!RSVP_ENDPOINT){
+      done.textContent = "Preview only: this RSVP was not sent anywhere. Once the RSVP sheet is connected, " + first + "’s reply will land in the couple’s spreadsheet.";
+      done.hidden = false; return;
+    }
+    btn.disabled = true; btn.textContent = "Sending…";
+    try{
+      const res = await fetch(RSVP_ENDPOINT, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(Object.assign({ action: "rsvp" }, data)) });
+      const out = await res.json();
+      if (!out.ok) throw new Error(out.error);
+      form.querySelectorAll("input,select,textarea,button").forEach(el => el.disabled = true);
+      done.textContent = data.attending === "yes"
+        ? "Thanks " + first + ", you’re on the list. Start training. Your team will be revealed at check-in."
+        : "Thanks " + first + ". We’ll miss you, and we’ll raise a glass for you.";
+      done.hidden = false;
+      btn.textContent = "Sent";
+    }catch(_){
+      err.textContent = "That didn’t send. Check your connection and try again.";
+      err.hidden = false;
+      btn.disabled = false; btn.textContent = "Send RSVP";
+    }
+  });
+})();
+</script>
+</body></html>
